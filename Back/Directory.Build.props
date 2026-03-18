@@ -1,10 +1,13 @@
 <Project>
   <!-- See https://aka.ms/dotnet/msbuild/customize for more details on customizing your build -->
   <PropertyGroup>
-  	<Product>CATMASH</Product>
-	<Authors>Julien PALLEC</Authors>
-	<TargetFramework>net9.0</TargetFramework>
-	<ImplicitUsings>enable</ImplicitUsings>
+    <Product>CATMASH</Product>
+    <Authors>Julien PALLEC</Authors>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 </Project>

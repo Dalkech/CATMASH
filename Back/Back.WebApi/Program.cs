@@ -1,4 +1,5 @@
 using Back.Infra.Repository;
+using Back.WebApi.Endpoints.CatImage;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,17 @@ builder.Services.AddDbContext<CatMashDBContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+#region Swagger / OpenAPI configuration
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApiDocument(config =>
+{
+    config.DocumentName = "CatMashAPI";
+    config.Title = "CatMashAPI v1";
+    config.Version = "v1";
+});
+
+#endregion
+
 var app = builder.Build();
 
 Console.WriteLine("Seeding dataContext...");
@@ -22,22 +34,26 @@ using (var scope = app.Services.CreateScope())
     await CatMashDBContext.SeedFromJsonUrlAsync(context);
 }
 
+app.UseOpenApi();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwaggerUi(config =>
+    {
+        config.DocumentTitle = "CatMashAPI";
+        config.Path = "/swagger";
+        config.DocumentPath = "/swagger/{documentName}/swagger.json";
+        config.DocExpansion = "list";
+    });
+}
+
 app.MapGet("/", () => "Hello World!");
 
-// Get all cats from the bootstrapped database
-app.MapGet("/catimages", async (CatMashDBContext context) =>
-{
-    Console.WriteLine("Fetching all cat images from the database...");
-    var catImages = await context.CatImages.ToListAsync();
-    return Results.Ok(catImages);
-});
-
-// Get a specific cat by ID
-app.MapGet("/catimages/{id}", async (int id, CatMashDBContext context) =>
-{
-    Console.WriteLine($"Fetching cat image with ID {id} from the database...");
-    var catimages = await context.CatImages.FindAsync(id);
-    return catimages == null ? Results.NotFound() : Results.Ok(catimages);
-});
+// Map CatImage endpoints
+app.MapCatImageEndpoints();
 
 app.Run();
+
+/// <summary>
+/// exposed for integration testing purposes
+/// </summary>
+public partial class Program {}
