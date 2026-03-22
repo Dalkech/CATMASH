@@ -1,6 +1,7 @@
 ﻿/* Auto Generated */
 
-export interface MyDto {
+export interface ExemplePerson {
+    id: number;
     name: string;
     age: number;
 }
