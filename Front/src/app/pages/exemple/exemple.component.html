@@ -1,0 +1,11 @@
+<p>exemple works!</p>
+
+@if (isLoading()) {
+  <app-pulsing-placeholder />
+} @else if (hasUsers()) {
+  @for (user of users(); track $index) {
+    <div>{{ user.name }}</div>
+  }
+} @else {
+  <div>No users found.</div>
+}
