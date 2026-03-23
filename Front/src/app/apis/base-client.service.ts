@@ -37,7 +37,7 @@ export abstract class BaseClientService<Type> implements IBaseClientService<Type
     return this.httpClient.get<Type[]>(`${this.apiUrl}/${this.type}`);
   };
 
-  GetById = (id: number): Observable<Type> => {
+  GetById = (id: any): Observable<Type> => {
     return this.httpClient.get<Type>(`${this.apiUrl}/${this.type}/${id}`);
   };
 }
