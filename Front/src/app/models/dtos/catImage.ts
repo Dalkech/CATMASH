@@ -1,6 +1,6 @@
 ﻿/* Auto Generated */
 
-export interface Cat {
+export interface CatImage {
     id: string;
     url: string;
     score?: number;
