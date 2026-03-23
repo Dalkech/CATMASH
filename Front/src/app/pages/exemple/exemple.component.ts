@@ -1,8 +1,13 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { ExemplePersonService } from '../../services/exemplePerson.service';
-import { ExemplePerson } from '../../models/dtos/exemplePerson';
 import { AppPulsingPlaceholderComponent } from '../../components/app-pulsing-placeholder/app-pulsing-placeholder.component';
 import { CommonModule } from '@angular/common';
+
+interface ExemplePerson {
+  id: number;
+  name: string;
+  age: number;
+}
 
 @Component({
   selector: 'app-exemple',
@@ -11,6 +16,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './exemple.component.html',
   styleUrl: './exemple.component.css'
 })
+
 export class ExempleComponent implements OnInit {
   users = signal<ExemplePerson[]>([]);
   isLoading = signal(true);

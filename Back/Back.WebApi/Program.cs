@@ -1,14 +1,13 @@
 using Back.Infra.Repository;
 using Back.WebApi.Endpoints.CatImage;
 using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 Console.WriteLine("Configuring services...");
 
-// Register CatMashDBContext with in-memory database
-builder.Services.AddDbContext<CatMashDBContext>(options =>
-    options.UseInMemoryDatabase("CatMashDb"));
+// Register CatMashDBContext 
+CatMashDbServiceRegistration.AddDbContext(builder, "CatMashDb");
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -25,14 +24,9 @@ builder.Services.AddOpenApiDocument(config =>
 
 var app = builder.Build();
 
-Console.WriteLine("Seeding dataContext...");
+// set DbContext and seed data
+await CatMashDbServiceRegistration.SetDbContextAsync(app);
 
-// Seed data after building the app
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<CatMashDBContext>();
-    await CatMashDBContext.SeedFromJsonUrlAsync(context);
-}
 
 app.UseOpenApi();
 if (app.Environment.IsDevelopment())

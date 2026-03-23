@@ -1,6 +1,6 @@
 namespace Back.Infra.Repository;
 
-internal class CatImagesResponse
+internal class CatImagesJSONResponse
 {
     public List<CatImage> Images { get; set; } = new();
 }
