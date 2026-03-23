@@ -1,0 +1,19 @@
+@if (loading()) {
+  <p>Loading cats...</p>
+} @else if (cat1() && cat2()) {
+  <div class="voting-container">
+    <h2>Which cat is cuter?</h2>
+    <div class="cat-pair">
+      <div class="cat-card">
+        <img [src]="cat1()?.image" [alt]="'Cat ' + cat1()?.id" />
+        <button (click)="vote(cat1()!.id, cat2()!.id)">Vote for this cat</button>
+      </div>
+      <div class="cat-card">
+        <img [src]="cat2()?.image" [alt]="'Cat ' + cat2()?.id" />
+        <button (click)="vote(cat2()!.id, cat1()!.id)">Vote for this cat</button>
+      </div>
+    </div>
+  </div>
+} @else {
+  <p>Not enough cats to vote on. Please try again later.</p>
+}
