@@ -4,6 +4,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { CatEffects } from './cats.effects';
 import * as CatActions from './cats.actions';
 import { CatService } from '../../services/cat.service';
+import { Cat } from '../../tests/models/Cat';
 
 describe('CatEffects', () => {
   let actions$: Observable<any>;
@@ -27,7 +28,7 @@ describe('CatEffects', () => {
 
   describe('loadCats$', () => {
     it('should return loadCatsSuccess on success', (done) => {
-      const cats = [{ id: '1', image: 'img.jpg' }];
+      const cats = [{ id: '1', image: 'img.jpg', score: 0 }];
       catServiceSpy.getAll.and.returnValue(of(cats));
 
       actions$ = of(CatActions.loadCats());

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { delay, Observable, of } from 'rxjs';
-import { Cat } from '../models/dtos/cat';
+import { Cat } from '../tests/models/Cat';
 
 @Injectable({
   providedIn: 'root'

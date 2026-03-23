@@ -1,6 +1,7 @@
 import { catReducer } from './cats.reducer';
 import { initialCatState } from './cats.state';
 import * as CatActions from './cats.actions';
+import { Cat } from '../../tests/models/Cat';
 
 describe('CatReducer', () => {
   it('should return initial state', () => {
@@ -17,7 +18,7 @@ describe('CatReducer', () => {
   });
 
   it('should handle loadCatsSuccess', () => {
-    const cats = [{ id: '1', image: 'img.jpg' }];
+    const cats = [{ id: '1', image: 'img.jpg', score: 0 }];
     const action = CatActions.loadCatsSuccess({ cats });
     const state = catReducer({ ...initialCatState, loading: true }, action);
     expect(state.cats).toEqual(cats);

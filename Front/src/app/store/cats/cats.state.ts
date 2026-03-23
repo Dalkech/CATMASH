@@ -1,4 +1,4 @@
-import { Cat } from '../../models/dtos/cat';
+import { Cat } from '../../tests/models/Cat';
 
 export interface CatState {
   cats: Cat[];

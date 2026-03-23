@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, computed, Signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Cat } from '../../models/dtos/cat';
+import { Cat } from '../../tests/models/Cat';
 import * as CatActions from '../../store/cats/cats.actions';
 import { selectCats, selectLoading, selectRandomCat } from '../../store/cats/cats.selectors';
 import { CommonModule } from '@angular/common';

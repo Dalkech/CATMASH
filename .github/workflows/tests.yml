@@ -1,0 +1,40 @@
+name: Tests Unitaires
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Tester le Frontend (Angular)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Front dependencies
+        run: npm ci
+        working-directory: Front
+
+      - name: Run Front unit tests
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+        working-directory: Front
+
+      # Tester le Backend (.NET Minimal API)
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore Back dependencies
+        run: dotnet restore
+        working-directory: Back
+
+      - name: Build and test Back
+        run: dotnet test
+        working-directory: Back

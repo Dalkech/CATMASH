@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { VotingComponent } from './voting.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { CatState, initialCatState } from '../../store/cats/cats.state';
-import { Cat } from '../../models/dtos/cat';
+import { Cat } from '../../tests/models/Cat';
 
 describe('VotingComponent', () => {
   let component: VotingComponent;

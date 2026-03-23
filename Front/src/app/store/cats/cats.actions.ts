@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Cat } from '../../models/dtos/cat';
+import { Cat } from '../../tests/models/Cat';
 
 export const loadCats = createAction('[Cat] Load Cats');
 
