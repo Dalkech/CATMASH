@@ -1,14 +1,14 @@
 import { createAction, props } from '@ngrx/store';
-import { Cat } from '../../tests/models/Cat';
+import { CatImage } from '../../models/dtos/catImage';
 
-export const loadCats = createAction('[Cat] Load Cats');
+export const loadCats = createAction('[CatImage] Load Cats');
 
-export const loadCatsSuccess = createAction('[Cat] Load Cats Success', props<{ cats: Cat[] }>());
+export const loadCatsSuccess = createAction('[CatImage] Load Cats Success', props<{ catImages: CatImage[] }>());
 
-export const loadCatsFailure = createAction('[Cat] Load Cats Failure', props<{ error: string }>());
+export const loadCatsFailure = createAction('[CatImage] Load Cats Failure', props<{ error: string }>());
 
-export const voteCat = createAction('[Cat] Vote Cat', props<{ winnerId: string; loserId: string }>());
+export const voteCat = createAction('[CatImage] Vote Cat', props<{ winnerId: string; loserId: string }>());
 
-export const voteCatSuccess = createAction('[Cat] Vote Cat Success', props<{ winnerId: string; loserId: string; winnerScore: number; loserScore: number }>());
+export const voteCatSuccess = createAction('[CatImage] Vote Cat Success', props<{ winnerId: string; loserId: string; winnerScore: number; loserScore: number }>());
 
-export const voteCatFailure = createAction('[Cat] Vote Cat Failure', props<{ error: string }>());
+export const voteCatFailure = createAction('[CatImage] Vote Cat Failure', props<{ error: string }>());

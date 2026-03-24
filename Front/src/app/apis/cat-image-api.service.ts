@@ -12,6 +12,6 @@ export class CatImageApiService extends BaseClientService<CatImage> {
 
 	constructor(httpClient: HttpClient)
   {
-    super(httpClient, 'catimage');
+    super(httpClient, 'catimages');
   }
 }

@@ -1,13 +1,13 @@
-import { Cat } from '../../tests/models/Cat';
+import { CatImage } from '../../models/dtos/catImage';
 
 export interface CatState {
-  cats: Cat[];
+  catImages: CatImage[];
   loading: boolean;
   error: string | null;
 }
 
 export const initialCatState: CatState = {
-  cats: [],
+  catImages: [],
   loading: false,
   error: null
 };
