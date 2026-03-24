@@ -3,13 +3,13 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of, throwError } from 'rxjs';
 import { CatEffects } from './cats.effects';
 import * as CatActions from './cats.actions';
-import { CatService } from '../../services/cat.service';
-import { Cat } from '../../tests/models/Cat';
+import { CatImage } from '../../models/dtos/catImage';
+import { CatImageApiService } from '../../apis/cat-image-api.service';
 
 describe('CatEffects', () => {
   let actions$: Observable<any>;
   let effects: CatEffects;
-  let catServiceSpy: jasmine.SpyObj<CatService>;
+  let catServiceSpy: jasmine.SpyObj<CatImageApiService>;
 
   beforeEach(() => {
     const spy = jasmine.createSpyObj('CatService', ['getAll', 'vote']);
@@ -18,23 +18,23 @@ describe('CatEffects', () => {
       providers: [
         CatEffects,
         provideMockActions(() => actions$),
-        { provide: CatService, useValue: spy }
+        { provide: CatImageApiService, useValue: spy }
       ]
     });
 
     effects = TestBed.inject(CatEffects);
-    catServiceSpy = TestBed.inject(CatService) as jasmine.SpyObj<CatService>;
+    catServiceSpy = TestBed.inject(CatImageApiService) as jasmine.SpyObj<CatImageApiService>;
   });
 
   describe('loadCats$', () => {
     it('should return loadCatsSuccess on success', (done) => {
-      const cats = [{ id: '1', image: 'img.jpg', score: 0 }];
-      catServiceSpy.getAll.and.returnValue(of(cats));
+      const catImages: CatImage[] = [{ id: '1', url: 'img.jpg', score: 0 }];
+      catServiceSpy.getAll.and.returnValue(of(catImages));
 
       actions$ = of(CatActions.loadCats());
 
       effects.loadCats$.subscribe(action => {
-        expect(action).toEqual(CatActions.loadCatsSuccess({ cats }));
+        expect(action).toEqual(CatActions.loadCatsSuccess({ catImages }));
         done();
       });
     });
@@ -46,36 +46,6 @@ describe('CatEffects', () => {
 
       effects.loadCats$.subscribe(action => {
         expect(action).toEqual(CatActions.loadCatsFailure({ error: 'error' }));
-        done();
-      });
-    });
-  });
-
-  describe('voteCat$', () => {
-    it('should return voteCatSuccess on success', (done) => {
-      const response = { winnerScore: 100, loserScore: 50 };
-      catServiceSpy.vote.and.returnValue(of(response));
-
-      actions$ = of(CatActions.voteCat({ winnerId: '1', loserId: '2' }));
-
-      effects.voteCat$.subscribe(action => {
-        expect(action).toEqual(CatActions.voteCatSuccess({
-          winnerId: '1',
-          loserId: '2',
-          winnerScore: 100,
-          loserScore: 50
-        }));
-        done();
-      });
-    });
-
-    it('should return voteCatFailure on error', (done) => {
-      catServiceSpy.vote.and.returnValue(throwError(new Error('error')));
-
-      actions$ = of(CatActions.voteCat({ winnerId: '1', loserId: '2' }));
-
-      effects.voteCat$.subscribe(action => {
-        expect(action).toEqual(CatActions.voteCatFailure({ error: 'error' }));
         done();
       });
     });

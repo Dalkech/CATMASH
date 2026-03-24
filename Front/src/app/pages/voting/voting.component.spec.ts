@@ -2,23 +2,26 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { VotingComponent } from './voting.component';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { CatState, initialCatState } from '../../store/cats/cats.state';
-import { Cat } from '../../tests/models/Cat';
+import { CatImage } from '../../models/dtos/catImage';
 
 describe('VotingComponent', () => {
   let component: VotingComponent;
   let fixture: ComponentFixture<VotingComponent>;
   let store: MockStore<{ cats: CatState }>;
-  const mockCats: Cat[] = [
-    { id: '1', image: 'img1.jpg', score: 10 },
-    { id: '2', image: 'img2.jpg', score: 20 },
-  ];
+
 
   beforeEach(async () => {
+
+    const mockCatImages: CatImage[] = [
+      { id: '1', url: 'img1.jpg', score: 10 },
+      { id: '2', url: 'img2.jpg', score: 20 },
+    ];
+
     await TestBed.configureTestingModule({
       imports: [VotingComponent],
       providers: [
         provideMockStore({
-          initialState: { cats: { ...initialCatState, cats: mockCats } }
+          initialState: { cats: { ...initialCatState, catImages: mockCatImages } }
         })
       ]
     }).compileComponents();
@@ -26,6 +29,7 @@ describe('VotingComponent', () => {
     store = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(VotingComponent);
     component = fixture.componentInstance;
+
     fixture.detectChanges();
   });
 
@@ -34,18 +38,22 @@ describe('VotingComponent', () => {
   });
 
   it('should select random cats', () => {
-    const cat1 = component.cat1();
-    const cat2 = component.cat2();
-    expect(cat1).toBeDefined();
-    expect(cat2).toBeDefined();
-    expect(cat1?.id).not.toBe(cat2?.id);
+
+  component.ngOnInit();
+    const catimage1 = component.catImage1();
+    const catimage2 = component.catImage2();
+
+    expect(catimage1).toBeDefined();
+    expect(catimage2).toBeDefined();
+    expect(catimage1?.id).not.toBe(catimage2?.id);
   });
 
   it('should dispatch vote action', () => {
+
     spyOn(store, 'dispatch');
     component.vote('1', '2');
     expect(store.dispatch).toHaveBeenCalledWith({
-      type: '[Cat] Vote Cat',
+      type: '[CatImage] Vote Cat',
       winnerId: '1',
       loserId: '2'
     });

@@ -1,16 +1,21 @@
 using Back.Infra.Repository;
 using Back.WebApi.Endpoints.CatImage;
-using Microsoft.EntityFrameworkCore;
+using Back.WebApi.CorsPolicies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 Console.WriteLine("Configuring services...");
 
-// Register CatMashDBContext with in-memory database
-builder.Services.AddDbContext<CatMashDBContext>(options =>
-    options.UseInMemoryDatabase("CatMashDb"));
+builder.CorsAddLocalHostPolicy();
 
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+// Register CatMashDBContext 
+CatMashDbServiceRegistration.AddDbContext(builder, "CatMashDb");
+
+if(builder.Environment.IsDevelopment())
+{
+	Console.WriteLine("Adding database developer page exception filter for development environment...");
+	builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+}
 
 #region Swagger / OpenAPI configuration
 builder.Services.AddEndpointsApiExplorer();
@@ -23,18 +28,13 @@ builder.Services.AddOpenApiDocument(config =>
 
 #endregion
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-Console.WriteLine("Seeding dataContext...");
-
-// Seed data after building the app
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<CatMashDBContext>();
-    await CatMashDBContext.SeedFromJsonUrlAsync(context);
-}
+// set DbContext and seed data
+await CatMashDbServiceRegistration.SetDbContextAsync(app);
 
 app.UseOpenApi();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUi(config =>
@@ -46,11 +46,31 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.MapGet("/", () => "Hello World!");
 
+app.MapGet("/", () =>  Results.Content($$"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <title>CATMASH API Documentation</title>
+      <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        a { font-size: 1.2em; color: #007BFF; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+      </style>
+    </head>
+    <body>
+      <h1>CATMASH API</h1>
+      <p><a href="/swagger" target="_blank">Open Swagger Documentation</a></p>
+    </body>
+    </html>
+    """, "text/html"));   
 // Map CatImage endpoints
 app.MapCatImageEndpoints();
-
+if(app.Environment.IsDevelopment())
+{
+    app.UseCorsAllowLocalHost();
+}
 app.Run();
 
 /// <summary>

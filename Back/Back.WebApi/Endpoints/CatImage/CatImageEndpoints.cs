@@ -1,5 +1,5 @@
 using Back.Infra.Repository;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Back.WebApi.Endpoints.CatImage;
 
@@ -18,28 +18,25 @@ public static class CatImageEndpoints
 
         group.MapGet("", GetAllCatImages).WithName("GetAllCatImages");
         group.MapGet("/{id}", GetCatImageById).WithName("GetCatImageById");
-        group.MapPost("", CreateCatImage).WithName("CreateCatImage");
     }
 
-    private static async Task<IResult> GetAllCatImages(CatMashDBContext context)
+
+    private static async Task<IResult> GetAllCatImages(ICatRepository catRepository)
     {
-        Console.WriteLine("Fetching all cat images from the database...");
-        List<Infra.Repository.CatImage>? catImages = await context.CatImages.ToListAsync();
-        return Results.Ok(catImages);
+        Console.WriteLine("[CatImages] Fetching all cat images from the database...");
+        
+        List<Infra.Repository.CatImage>? catImages = await catRepository.GetAllAsync();
+        List<DTOs.CatImage> results = DTOs.CatImage.ToDTOFromList(catImages);
+        return TypedResults.Ok(results);
     }
 
-    private static async Task<IResult> GetCatImageById(string id, CatMashDBContext context)
+    private static async Task<Results<Ok<DTOs.CatImage>, NotFound>> GetCatImageById(string id, ICatRepository catRepository)
     {
-        Console.WriteLine($"Fetching cat image with ID {id} from the database...");
-        Infra.Repository.CatImage? catImage = await context.CatImages.FindAsync(id);
-        return catImage == null ? Results.NotFound() : Results.Ok(catImage);
-    }
-
-    private static async Task<IResult> CreateCatImage(Infra.Repository.CatImage catImage, CatMashDBContext context)
-    {
-        Console.WriteLine("Creating a new cat image in the database...");
-        context.CatImages.Add(catImage);
-        await context.SaveChangesAsync();
-        return Results.Created($"/catimages/{catImage.Id}", catImage);
+        Console.WriteLine($"[CatImages] Fetching cat image with ID {id} from the database...");
+        
+        Infra.Repository.CatImage? catImage = await catRepository.GetByIdAsync(id);
+        return catImage is not null 
+            ? TypedResults.Ok(DTOs.CatImage.ToDTO(catImage)) 
+            : TypedResults.NotFound();
     }
 }
