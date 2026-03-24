@@ -1,0 +1,5 @@
+root = true
+# Suppress CS8618 for all C# files in the 'DTOs' folder and subfolders 
+# MTT c# -> ts work only on simple class properties, so we can ignore the warning about non-nullable properties not being initialized.
+[DTOs/**/*.cs]
+dotnet_diagnostic.CS8618.severity = none

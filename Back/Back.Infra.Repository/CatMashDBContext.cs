@@ -27,7 +27,7 @@ public class CatMashDBContext : DbContext
             var json = await response.Content.ReadAsStringAsync();
             
             // Deserialize the wrapper object containing the "images" array
-            var response_obj = JsonSerializer.Deserialize<CatImagesResponse>(json, jsonOptions);
+            var response_obj = JsonSerializer.Deserialize<CatImagesJSONResponse>(json, jsonOptions);
             if (response_obj?.Images != null && response_obj.Images.Count > 0)
             {
                 context.CatImages.AddRange(response_obj.Images);

@@ -4,3 +4,6 @@
 # Ignorer les configurations locales de VS Code
 .vscode/settings.json
 .vscode/tasks.json
+
+# Ignorer extensions de VS Code
+cspell.json

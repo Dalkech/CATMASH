@@ -3,7 +3,7 @@ import { CatState } from './cats.state';
 
 export const selectCatState = createFeatureSelector<CatState>('cats');
 
-export const selectCats = createSelector(selectCatState, state => state.cats);
+export const selectCats = createSelector(selectCatState, state => state.catImages);
 
 export const selectLoading = createSelector(selectCatState, state => state.loading);
 
