@@ -4,7 +4,7 @@ public static class ScoreService
 {
 
 	private const int 
-		CALIBRATION_FACTOR = 400,
+		CALIBRATION_FACTOR = 100,
 		K_FACTOR = 20,
 		WIN_RESULT = 1, 
 		LOOSE_RESULT = 0
