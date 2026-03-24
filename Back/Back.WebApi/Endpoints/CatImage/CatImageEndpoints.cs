@@ -21,20 +21,20 @@ public static class CatImageEndpoints
     }
 
 
-    private static async Task<IResult> GetAllCatImages(ICatRepository catRepository)
+    private static async Task<IResult> GetAllCatImages(ICatImageRepository catRepository)
     {
         Console.WriteLine("[CatImages] Fetching all cat images from the database...");
         
-        List<Infra.Repository.CatImage>? catImages = await catRepository.GetAllAsync();
+        List<Domain.CatImage>? catImages = await catRepository.GetAllAsync();
         List<DTOs.CatImage> results = DTOs.CatImage.ToDTOFromList(catImages);
         return TypedResults.Ok(results);
     }
 
-    private static async Task<Results<Ok<DTOs.CatImage>, NotFound>> GetCatImageById(string id, ICatRepository catRepository)
+    private static async Task<Results<Ok<DTOs.CatImage>, NotFound>> GetCatImageById(string id, ICatImageRepository catRepository)
     {
         Console.WriteLine($"[CatImages] Fetching cat image with ID {id} from the database...");
         
-        Infra.Repository.CatImage? catImage = await catRepository.GetByIdAsync(id);
+        Domain.CatImage? catImage = await catRepository.GetByIdAsync(id);
         return catImage is not null 
             ? TypedResults.Ok(DTOs.CatImage.ToDTO(catImage)) 
             : TypedResults.NotFound();

@@ -1,6 +1,9 @@
 using Back.Infra.Repository;
 using Back.WebApi.Endpoints.CatImage;
 using Back.WebApi.CorsPolicies;
+using Back.WebApi.Validators;
+using Back.WebApi.Endpoints.Vote;
+using Back.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +12,7 @@ Console.WriteLine("Configuring services...");
 builder.CorsAddLocalHostPolicy();
 
 // Register CatMashDBContext 
-CatMashDbServiceRegistration.AddDbContext(builder, "CatMashDb");
+CatMashDbServiceRegistration.AddDbContext(builder.Services, "CatMashDb");
 
 if(builder.Environment.IsDevelopment())
 {
@@ -28,11 +31,26 @@ builder.Services.AddOpenApiDocument(config =>
 
 #endregion
 
+Console.WriteLine("[Validators] Registering VoteValidationService...");
+builder.Services.AddTransient<VoteValidationService>();
+
+Console.WriteLine("[Application] adding UseCase");
+builder.Services.AddUseCases();
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.IncludeFields = true;
+});
+
 WebApplication app = builder.Build();
 
+
+// In Program.cs or startup logic
+if (!app.Environment.IsEnvironment("Testing"))
+{
 // set DbContext and seed data
 await CatMashDbServiceRegistration.SetDbContextAsync(app);
-
+}
 app.UseOpenApi();
 
 if (app.Environment.IsDevelopment())
@@ -45,7 +63,6 @@ if (app.Environment.IsDevelopment())
         config.DocExpansion = "list";
     });
 }
-
 
 app.MapGet("/", () =>  Results.Content($$"""
     <!DOCTYPE html>
@@ -67,6 +84,7 @@ app.MapGet("/", () =>  Results.Content($$"""
     """, "text/html"));   
 // Map CatImage endpoints
 app.MapCatImageEndpoints();
+app.MapVoteEndpoints();
 if(app.Environment.IsDevelopment())
 {
     app.UseCorsAllowLocalHost();

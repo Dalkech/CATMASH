@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Back.Infra.Repository;
 namespace Back.WebApi.DTOs;
 
 public class CatImage()
@@ -9,7 +7,7 @@ public class CatImage()
     public string Url { get; set; }
     public int? Score { get; set; }
 
-    public static CatImage ToDTO(Infra.Repository.CatImage catImage)
+    public static CatImage ToDTO(Domain.CatImage catImage)
     {
         return new CatImage
         {
@@ -18,7 +16,7 @@ public class CatImage()
             Score = catImage.Score
         };
     }
-    static public List<CatImage> ToDTOFromList(List<Infra.Repository.CatImage> catImages)
+    static public List<CatImage> ToDTOFromList(List<Domain.CatImage> catImages)
     {
         if (catImages.Count == 0)
         {

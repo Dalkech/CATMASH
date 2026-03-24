@@ -1,3 +1,5 @@
+using Back.Domain;
+
 namespace Back.Infra.Repository;
 
 internal class CatImagesJSONResponse

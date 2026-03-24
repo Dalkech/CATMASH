@@ -24,8 +24,8 @@ namespace Back.IntegrationTests
             var db = scope.ServiceProvider.GetRequiredService<CatMashDBContext>();
             db.Database.EnsureDeleted(); // Ensure clean state
             db.CatImages.AddRange(
-                new Infra.Repository.CatImage { Id = "aca", Url = "https://example.com/aca.jpg" },
-                new Infra.Repository.CatImage { Id = "xyz", Url = "https://example.com/xyz.jpg" }
+                new Domain.CatImage { Id = "aca", Url = "https://example.com/aca.jpg" },
+                new Domain.CatImage { Id = "xyz", Url = "https://example.com/xyz.jpg" }
             );
             await db.SaveChangesAsync();
         }

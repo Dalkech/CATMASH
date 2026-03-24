@@ -3,6 +3,7 @@
 using System.Text.Json;
 using System.Net.Http;
 using Microsoft.EntityFrameworkCore;
+using Back.Domain;
 
 public class CatMashDBContext : DbContext
 {

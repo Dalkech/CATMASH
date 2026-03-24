@@ -6,13 +6,13 @@ namespace Back.Infra.Repository;
 
 public static class CatMashDbServiceRegistration
 {
-    public static void AddDbContext(this WebApplicationBuilder builder, string dbName = "InMemoryCatMashDb" )
+    public static void AddDbContext(this IServiceCollection services, string dbName = "InMemoryCatMashDb" )
     {
-        builder.Services.AddDbContext<CatMashDBContext>(options =>
+        services.AddDbContext<CatMashDBContext>(options =>
             options.UseInMemoryDatabase(dbName)
         );
 
-        builder.Services.AddScoped<ICatRepository, CatRepository>();
+        services.AddScoped<ICatImageRepository, CatImageRepository>();
     }
 
     /// <summary>
