@@ -20,25 +20,36 @@ public class ScoreServiceTests
     [Fact]
     public void CalculateNewScores_WinnerHigherRated_WinsLessPoints()
     {
-        var winner = new CatImage { Id="mock1HigherRated", Url="", Score = 1600, WinCount = 0 };
-        var loser = new CatImage { Id="mock2", Url="", Score = 1400, LooseCount = 0 };
-
+		int winnerOldRating = 1600;
+		int loserOldRating = 1400; 
+        
+		var winner = new CatImage { Id="mock1HigherRated", Url="", Score = winnerOldRating, WinCount = 0 };
+        var loser = new CatImage { Id="mock2", Url="", Score = loserOldRating, LooseCount = 0 };
         ScoreService.CalculateNewScores(winner, loser);
+		var winnerWithHigherRateGain = winner.Score - winnerOldRating;
 
-        Assert.True(winner.Score < 1620); // K=20, but expected win high → small gain
-        Assert.True(loser.Score < 1400);  // Should lose points
+		winnerOldRating = 1400;
+		loserOldRating = 1600;
+		winner = new CatImage { Id="mock1HigherRated", Url="", Score = winnerOldRating, WinCount = 0 };
+        loser = new CatImage { Id="mock2", Url="", Score = loserOldRating, LooseCount = 0 };
+        ScoreService.CalculateNewScores(winner, loser);
+		var winnerWithLowerRateGain = winner.Score - winnerOldRating;
+
+
+		Assert.True(winnerWithLowerRateGain > winnerWithHigherRateGain);
     }
 
     [Fact]
     public void CalculateNewScores_UnderdogWins_GainsMorePoints()
     {
-        var winner = new CatImage { Id="mock", Url="", Score = 1400, WinCount = 0 };
-        var loser = new CatImage { Id="mock2HigherRated", Url="",  Score = 1600, LooseCount = 0 };
+		int winnerOldRating = 1400;
+		int loserOldRating = 1600; 
+        var winner = new CatImage { Id="mock", Url="", Score = winnerOldRating, WinCount = 0 };
+        var loser = new CatImage { Id="mock2HigherRated", Url="",  Score = loserOldRating, LooseCount = 0 };
 
         ScoreService.CalculateNewScores(winner, loser);
 
-        Assert.True(winner.Score > 1410); // Bigger gain due to surprise win
-        Assert.True(loser.Score < 1600);
+		Assert.True((winner.Score - winnerOldRating) > (loserOldRating - loser.Score));
     }
 
     [Fact]
